@@ -1,6 +1,6 @@
 import { Category } from './category.model';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError, flatMap } from 'rxjs/operators';
 import { element } from '@angular/core/src/render3';
@@ -20,6 +20,44 @@ export class CategoryService {
       map(this.jsonDataToCategories)
     )
   }
+
+  getById(id: number): Observable<Category>{
+    const url = `${this.apiPath}/${id}`;
+
+    return this.http.get(url).pipe(
+      catchError(this.handleError),
+      map(this.jsonDataToCategory)
+    )
+  }
+
+  create(category: Category): Observable<Category>{
+    return this.http.post(this.apiPath, category).pipe(
+      catchError(this.handleError),
+      map(this.jsonDataToCategory)
+    )
+  }
+
+  update(category: Category): Observable<Category>{
+    const url = `${this.apiPath}/${category.id}`;
+
+    return this.http.put(url, category).pipe(
+      catchError(this.handleError),
+      map(() => category)
+    )
+  }
+
+  delete(id: number): Observable<Any>{
+    const url = `${this.apiPath}/${id}`;
+
+    return this.http.delete(url).pipe(
+      catchError(this.handleError),
+      map(() => null)
+    )
+  }
+
+  private jsonDataToCategory(jsonData: any): Category {
+    return jsonData as Category;
+  } 
 
   private jsonDataToCategories(jsonData: any[]): Category[]{
     const categories: Category[] = []
