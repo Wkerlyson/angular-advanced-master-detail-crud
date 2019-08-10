@@ -46,7 +46,7 @@ export class CategoryService {
     )
   }
 
-  delete(id: number): Observable<Any>{
+  delete(id: number): Observable<any>{
     const url = `${this.apiPath}/${id}`;
 
     return this.http.delete(url).pipe(
